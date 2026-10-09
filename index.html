@@ -11,13 +11,13 @@
     background: #10151f;
     color: #e0e0e0;
     min-height: 100vh;
-    padding: 20px;
+    padding: 16px;
   }
-  .container { max-width: 1000px; margin: 0 auto; }
+  .container { max-width: 1200px; margin: 0 auto; }
   h1 {
     text-align: center;
-    font-size: 1.7em;
-    margin-bottom: 8px;
+    font-size: 1.5em;
+    margin-bottom: 6px;
     background: linear-gradient(135deg, #4fc3f7, #00b4d8, #00e5a0);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -26,130 +26,89 @@
   .subtitle {
     text-align: center;
     color: #888;
-    font-size: 0.85em;
+    font-size: 0.8em;
     margin-bottom: 8px;
   }
   .version-info {
     text-align: center;
     color: #4fc3f7;
-    font-size: 0.85em;
-    margin-bottom: 16px;
+    font-size: 0.78em;
+    margin-bottom: 12px;
     font-family: 'Consolas', 'Monaco', monospace;
   }
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-  }
-  @media (max-width: 700px) {
-    .cards { grid-template-columns: 1fr; }
-  }
-  .card {
+  .table-wrap {
     background: #16213e;
-    border-radius: 12px;
-    padding: 20px;
     border: 1px solid #1e3a5f;
-    transition: border-color 0.3s;
-  }
-  .card:hover { border-color: #4fc3f7; }
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-  }
-  .card-title {
-    font-size: 1.15em;
-    font-weight: 600;
-    color: #fff;
-  }
-  .badge {
-    font-size: 0.7em;
-    padding: 3px 8px;
     border-radius: 10px;
+    overflow-x: auto;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 0.76em; }
+  thead th {
+    background: #1b2a4d;
+    color: #4fc3f7;
+    text-align: left;
+    padding: 8px 10px;
+    font-weight: 600;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+  }
+  tbody td {
+    padding: 7px 10px;
+    border-top: 1px solid #14203c;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  tbody tr:hover { background: #1a2b4d; }
+  .ch-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 9px;
+    font-size: 0.9em;
     background: #1e3a5f;
     color: #4fc3f7;
   }
-  .field { margin-bottom: 10px; }
-  .field-label {
-    font-size: 0.72em;
-    color: #888;
-    margin-bottom: 4px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .field-value {
+  .ch-stable { background: #0d3b2e; color: #00e5a0; }
+  .ch-beta { background: #3b2e0d; color: #ffc107; }
+  .ch-dev { background: #3b1a0d; color: #ff9800; }
+  .ch-canary { background: #3b0d1e; color: #ff4d6d; }
+  .ch-win7 { background: #1e2e3b; color: #8fb3d9; }
+  .ch-enterprise { background: #2e1e3b; color: #b388ff; }
+  .arch { color: #aaa; font-family: 'Consolas', 'Monaco', monospace; }
+  .ver { color: #fff; font-family: 'Consolas', 'Monaco', monospace; }
+  .size { color: #aaa; font-family: 'Consolas', 'Monaco', monospace; }
+  .fname { color: #c8d6e5; font-family: 'Consolas', 'Monaco', monospace; word-break: break-all; }
+  .sha {
     font-family: 'Consolas', 'Monaco', monospace;
-    font-size: 0.72em;
-    background: #0b1220;
-    padding: 6px 8px;
-    border-radius: 6px;
-    word-break: break-all;
-    color: #e0e0e0;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 6px;
+    color: #9aa7b8;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
   }
-  .field-value a {
-    color: #4fc3f7;
-    text-decoration: none;
-    flex: 1;
-  }
-  .field-value a:hover { text-decoration: underline; }
-  .field-value span { flex: 1; }
+  .sha .hash { max-width: 130px; overflow: hidden; text-overflow: ellipsis; }
   .copy-btn {
     background: none;
     border: 1px solid #1e3a5f;
     color: #888;
-    padding: 2px 6px;
+    padding: 1px 6px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 0.85em;
-    flex-shrink: 0;
     transition: all 0.2s;
   }
   .copy-btn:hover { border-color: #4fc3f7; color: #4fc3f7; }
   .copy-btn.copied { border-color: #00e5a0; color: #00e5a0; }
-  .download-btn {
-    display: block;
-    width: 100%;
-    text-align: center;
-    background: linear-gradient(135deg, #00a8e8, #00897b);
-    color: #fff;
+  .dl-link {
+    color: #4fc3f7;
     text-decoration: none;
-    padding: 12px;
-    border-radius: 8px;
-    font-size: 0.95em;
     font-weight: 600;
-    margin-top: 12px;
-    transition: opacity 0.2s;
   }
-  .download-btn:hover { opacity: 0.9; }
-  .download-btn .sub {
-    display: block;
-    font-size: 0.75em;
-    font-weight: normal;
-    opacity: 0.85;
-    margin-top: 3px;
-  }
-  .note {
-    background: #1e3a5f;
-    border-left: 3px solid #4fc3f7;
-    padding: 12px 16px;
-    border-radius: 0 8px 8px 0;
-    margin-bottom: 20px;
-    font-size: 0.82em;
-    color: #aaa;
-    line-height: 1.6;
-  }
-  .note strong { color: #4fc3f7; }
+  .dl-link:hover { text-decoration: underline; }
   .footer {
     text-align: center;
-    margin-top: 24px;
-    font-size: 0.75em;
+    margin-top: 14px;
+    font-size: 0.74em;
     color: #555;
-    line-height: 1.8;
   }
   .footer a { color: #4fc3f7; text-decoration: none; }
   .toast {
@@ -159,9 +118,9 @@
     transform: translateX(-50%);
     background: #1e3a5f;
     color: #4fc3f7;
-    padding: 10px 24px;
+    padding: 8px 20px;
     border-radius: 8px;
-    font-size: 0.9em;
+    font-size: 0.85em;
     opacity: 0;
     transition: opacity 0.3s;
     pointer-events: none;
@@ -172,74 +131,28 @@
 <body>
 <div class="container">
   <h1>Microsoft Edge 离线安装包</h1>
-  <p class="subtitle">官方 CDP API 直链 · 完整离线安装包 · 支持 IDM 下载</p>
-  <p class="version-info" id="versionInfo">正在获取最新版本...</p>
+  <p class="subtitle">官方 CDP API 直链 · 全通道完整离线安装包 · 支持 IDM 下载</p>
+  <p class="version-info" id="versionInfo">正在获取版本数据...</p>
 
-  <div class="note">
-    <strong>说明：</strong>数据来自微软官方 CDP API（msedge.api.cdp.microsoft.com），版本号自动更新。
-    下载链接为微软官方 CDN 直链，可直接用浏览器或 IDM 下载完整离线安装包，无需登录。
-  </div>
-
-  <div class="cards">
-    <!-- Windows x64 -->
-    <div class="card" id="card-x64">
-      <div class="card-header">
-        <span class="card-title">Windows x64</span>
-        <span class="badge" id="badge-x64">稳定版</span>
-      </div>
-      <div class="field">
-        <div class="field-label">适用系统</div>
-        <div class="field-value"><span>Win10 / Win11 64位</span></div>
-      </div>
-      <div class="field">
-        <div class="field-label">版本 / 大小</div>
-        <div class="field-value"><span id="meta-x64">-</span></div>
-      </div>
-      <div class="field">
-        <div class="field-label">官方直链（支持IDM）</div>
-        <div class="field-value">
-          <a href="#" target="_blank" id="link-x64">-</a>
-          <button class="copy-btn" onclick="copyText('link-x64', this)">复制</button>
-        </div>
-      </div>
-      <a href="#" target="_blank" class="download-btn" id="dl-x64">
-        立即下载（离线包）
-        <span class="sub" id="dl-size-x64"></span>
-      </a>
-    </div>
-
-    <!-- Windows ARM64 -->
-    <div class="card" id="card-arm64">
-      <div class="card-header">
-        <span class="card-title">Windows ARM64</span>
-        <span class="badge" id="badge-arm64">稳定版</span>
-      </div>
-      <div class="field">
-        <div class="field-label">适用系统</div>
-        <div class="field-value"><span>Win11 ARM 设备（骁龙/Surface）</span></div>
-      </div>
-      <div class="field">
-        <div class="field-label">版本 / 大小</div>
-        <div class="field-value"><span id="meta-arm64">-</span></div>
-      </div>
-      <div class="field">
-        <div class="field-label">官方直链（支持IDM）</div>
-        <div class="field-value">
-          <a href="#" target="_blank" id="link-arm64">-</a>
-          <button class="copy-btn" onclick="copyText('link-arm64', this)">复制</button>
-        </div>
-      </div>
-      <a href="#" target="_blank" class="download-btn" id="dl-arm64">
-        立即下载（离线包）
-        <span class="sub" id="dl-size-arm64"></span>
-      </a>
-    </div>
+  <div class="table-wrap">
+    <table id="verTable">
+      <thead>
+        <tr>
+          <th>通道</th>
+          <th>架构</th>
+          <th>版本号</th>
+          <th>大小</th>
+          <th>文件名称</th>
+          <th>校验值 SHA256</th>
+          <th>下载</th>
+        </tr>
+      </thead>
+      <tbody id="verBody"></tbody>
+    </table>
   </div>
 
   <p class="footer" id="footer">
-    数据来源：<a href="https://msedge.api.cdp.microsoft.com" target="_blank">Microsoft Edge CDP API</a> |
-    版本自动更新 · 由 AI 云自动化维护<br>
-    <a href="https://www.423down.com" target="_blank">423down.com</a>
+    数据来源：<a href="https://msedge.api.cdp.microsoft.com" target="_blank">Microsoft Edge CDP API</a> | 版本自动更新 · 由 AI 云自动化维护 · <a href="https://www.423down.com" target="_blank">423down</a>
   </p>
 </div>
 
@@ -248,27 +161,216 @@
 <script>
 // 嵌入兜底数据（由 GitHub Actions 定期更新，页面加载失败时使用）
 var EMBEDDED_DATA = {
-  "checked_at": "2026-10-09 12:00",
-  "x64": {
-    "version": "155.0.4283.45",
-    "size": "198MB",
-    "downloadURL": "https://msedge.sb.tlu.dl.delivery.mp.microsoft.com/filestreamingservice/files/db6b5616-d868-437c-8ebe-096082316a2f?P1=1792122338&P2=404&P3=2&P4=VQj32%2f59OAhmTYSlE2ebSmPre%2ba8%2fInf63S%2bgqtxgm3TD4drNlCgSE6R2AuyuNiWIzgaf1ygYlD%2f3Ewqj1np1Q%3d%3d"
-  },
-  "arm64": {
-    "version": "155.0.4283.45",
-    "size": "201MB",
-    "downloadURL": "https://msedge.sb.tlu.dl.delivery.mp.microsoft.com/filestreamingservice/files/c641b5c2-5c59-4078-aed1-3e4d1879597a?P1=1792122340&P2=404&P3=2&P4=VVOcmiCuAPV4y4JSNfm1WUOlrtmLBDoVWCDU52vfvRQXpqGOAeej2rylt2fMLoCJEBaDDnLF3c53R8hefzT9rw%3d%3d"
-  }
+  "checked_at": "2026-10-09T06:15:10Z",
+  "items": [
+    {
+      "version": "155.0.4283.45",
+      "size": "198MB",
+      "downloadURL": "https://msedge.sb.tlu.dl.delivery.mp.microsoft.com/filestreamingservice/files/db6b5616-d868-437c-8ebe-096082316a2f?P1=1792131271&P2=404&P3=2&P4=igPuabRDmL%2bp8VNkMnrz%2fvw3Iv4kyhRWh4X4n%2fmmcJ3gfdk6OFERyhhEXnEFHA1yS59gDAWkFQcwFjj6cDQaFw%3d%3d",
+      "sha256": "8b6bbd9e7c6d1574b3d979ff0ee7c7935884876426419fe2dfeada9fcea98d99",
+      "fileName": "MicrosoftEdge_X64_155.0.4283.45.exe",
+      "key": "stable-x64",
+      "channel": "稳定版",
+      "arch": "x64"
+    },
+    {
+      "version": "155.0.4283.45",
+      "size": "175MB",
+      "downloadURL": "https://msedge.sb.tlu.dl.delivery.mp.microsoft.com/filestreamingservice/files/2de22336-e557-477d-83ab-28ab0124451c?P1=1792131274&P2=404&P3=2&P4=fKE9WEIB9%2bq0D55gNzOobujNhMHHUjmLZwdqed5vlGg9%2ba27ZKl02PXMgMNEMz%2fkXR%2bK1ugKnpEHmTjc58s2gQ%3d%3d",
+      "sha256": "b890aae3f4e58dc5e289f098e27b5274b202f6c43b82dbd575858542dc305eb7",
+      "fileName": "MicrosoftEdge_X86_155.0.4283.45.exe",
+      "key": "stable-x86",
+      "channel": "稳定版",
+      "arch": "x86"
+    },
+    {
+      "version": "155.0.4283.45",
+      "size": "201MB",
+      "downloadURL": "https://msedge.sb.tlu.dl.delivery.mp.microsoft.com/filestreamingservice/files/c641b5c2-5c59-4078-aed1-3e4d1879597a?P1=1792131279&P2=404&P3=2&P4=D%2bUkJJL%2fQ5CrP9D20IzK30SjIiQM68ymyBuHDDwSnDtn%2f6Pdjtxwbv%2f8myTvhx9z6CCW6KAU4InZGz%2fePszrKA%3d%3d",
+      "sha256": "f8849f254cdc9732a9c6a12d4c4c08406748d09a1b058543cb4ba51fe9390539",
+      "fileName": "MicrosoftEdge_ARM64_155.0.4283.45.exe",
+      "key": "stable-arm64",
+      "channel": "稳定版",
+      "arch": "arm64"
+    },
+    {
+      "version": "156.0.4314.8",
+      "size": "199MB",
+      "downloadURL": "https://msedge.sb.tlu.dl.delivery.mp.microsoft.com/filestreamingservice/files/a2ec9d1d-89c6-4cb6-8d7f-338e2e33151c?P1=1792131282&P2=404&P3=2&P4=H9uQ14KG42YvtqzeDpgibTdKDlPopk21Z5Wgp2RRg6QV6E4cdxmZ6kHkgq3UnAEE9DK%2fEk%2fbSBrdFsV1O61qpA%3d%3d",
+      "sha256": "76f8056f3015356400715a49883089c9f4b23e319a299f5c211b64bf4a43cb31",
+      "fileName": "MicrosoftEdge_X64_156.0.4314.8.exe",
+      "key": "beta-x64",
+      "channel": "Beta",
+      "arch": "x64"
+    },
+    {
+      "version": "156.0.4314.8",
+      "size": "176MB",
+      "downloadURL": "https://msedge.sb.tlu.dl.delivery.mp.microsoft.com/filestreamingservice/files/0bb7c62f-398c-40d9-94e2-03a627da0ebd?P1=1792131287&P2=404&P3=2&P4=Xzxpr3O1FP3sPjAOTD1Ry8evqyx%2fqeP2qdeO2xcK0%2bcvgSSlAsU5zrsGHRPu5Li5mcptcRl7EnGeiG0mTTWL1Q%3d%3d",
+      "sha256": "612070c530e5c69a3896a6bf3683e4e58ba51641ad5db25694c7a77d39b61d5a",
+      "fileName": "MicrosoftEdge_X86_156.0.4314.8.exe",
+      "key": "beta-x86",
+      "channel": "Beta",
+      "arch": "x86"
+    },
+    {
+      "version": "156.0.4314.8",
+      "size": "202MB",
+      "downloadURL": "https://msedge.sb.tlu.dl.delivery.mp.microsoft.com/filestreamingservice/files/0d63233f-6686-4dba-aeb7-1eb431b80599?P1=1792131290&P2=404&P3=2&P4=bmDjxabF34URWLRcScwo%2fgF4zHxkavSRxLYFFWlyEVJXDtJiKCLT3W8bu3gihNkB0VM8gsU5kjXc3xSu9seucg%3d%3d",
+      "sha256": "0445ae528c244fc2956f11c043cb70ccb8fcd46e4edb7a2405c2f4df99e2dc98",
+      "fileName": "MicrosoftEdge_ARM64_156.0.4314.8.exe",
+      "key": "beta-arm64",
+      "channel": "Beta",
+      "arch": "arm64"
+    },
+    {
+      "version": "157.0.4322.0",
+      "size": "198MB",
+      "downloadURL": "https://msedge.sb.tlu.dl.delivery.mp.microsoft.com/filestreamingservice/files/822801d7-3c41-476c-a884-f6e0241db7d9?P1=1792131294&P2=404&P3=2&P4=SARwyJr5o1wG1%2fUediZxtIU9Fcc09cayoVVaWZsBMr9r5H3xVV8k9csimLHP8qhl1JgN7kn%2btYJS2BHqO%2biL4w%3d%3d",
+      "sha256": "f861020668b64197636eb7779487ae03a4bae85698adea863e15b06bf2e1f060",
+      "fileName": "MicrosoftEdge_X64_157.0.4322.0.exe",
+      "key": "dev-x64",
+      "channel": "Dev",
+      "arch": "x64"
+    },
+    {
+      "version": "157.0.4322.0",
+      "size": "176MB",
+      "downloadURL": "https://msedge.sb.tlu.dl.delivery.mp.microsoft.com/filestreamingservice/files/ae13c2f9-504f-4fc5-ba6a-0caddf0f354c?P1=1792131296&P2=404&P3=2&P4=mY0FiN6xymEOQGD%2bbTRSrtBen2ObagluwGasm6AWtyALhLTSh2pine5otF3NVe%2bqesj5vEhwPrIW%2fd7hXl2htw%3d%3d",
+      "sha256": "7bbb283570ec2115dd2c9cc5fdff1bb01501c380d0e393f5733ce8f5eb85da8f",
+      "fileName": "MicrosoftEdge_X86_157.0.4322.0.exe",
+      "key": "dev-x86",
+      "channel": "Dev",
+      "arch": "x86"
+    },
+    {
+      "version": "157.0.4322.0",
+      "size": "202MB",
+      "downloadURL": "https://msedge.sb.tlu.dl.delivery.mp.microsoft.com/filestreamingservice/files/191116a3-b740-4b2d-b4b6-51eb161c09d1?P1=1792131299&P2=404&P3=2&P4=F%2bP%2f%2fI%2b0N6TKb9o6dZButa1zbj11LIuIbQaTsoH57LKxvMUw8bkmqX3sfWZFk30VbSOOQWslmt1wPVxwVZq%2fTw%3d%3d",
+      "sha256": "3a5c77aa8332bc6eda37eb6bce6d85f4e6c65af46f5631206ce617cec3105974",
+      "fileName": "MicrosoftEdge_ARM64_157.0.4322.0.exe",
+      "key": "dev-arm64",
+      "channel": "Dev",
+      "arch": "arm64"
+    },
+    {
+      "version": "157.0.4327.0",
+      "size": "199MB",
+      "downloadURL": "https://msedge.sb.tlu.dl.delivery.mp.microsoft.com/filestreamingservice/files/4d5c8120-1526-4067-be9a-05f03ddf0d8b?P1=1792131302&P2=404&P3=2&P4=LMW0vVgLuw%2f8kG%2f2XAnQm8daTtYwEuWBi6JuB2IQol%2bpH4yrJu2sNkmN6VZ2Xk8ddeMlsq5txgjdVxDfkKzjQQ%3d%3d",
+      "sha256": "db4ee57a600622567385e51dd3c664ebc183563f774ea2b82f80daae2c1a3451",
+      "fileName": "MicrosoftEdge_X64_157.0.4327.0.exe",
+      "key": "canary-x64",
+      "channel": "Canary",
+      "arch": "x64"
+    },
+    {
+      "version": "157.0.4327.0",
+      "size": "176MB",
+      "downloadURL": "https://msedge.sb.tlu.dl.delivery.mp.microsoft.com/filestreamingservice/files/51ba38cc-a92b-4ed8-93b3-96ac3b0e9dd8?P1=1792131305&P2=404&P3=2&P4=hqfMFhu10ImWiDKzMDLSERGBPoLexC9Kt4vneb4DEaGJuWalHruNQOOqcQxMYrC9f7%2bCO8b4NxCtuX80i8zXyQ%3d%3d",
+      "sha256": "1e87d8ee166f681db0fb1beb3b0032ddc23e44251326f023e4be3be877a02e99",
+      "fileName": "MicrosoftEdge_X86_157.0.4327.0.exe",
+      "key": "canary-x86",
+      "channel": "Canary",
+      "arch": "x86"
+    },
+    {
+      "version": "157.0.4327.0",
+      "size": "202MB",
+      "downloadURL": "https://msedge.sb.tlu.dl.delivery.mp.microsoft.com/filestreamingservice/files/825aaf91-8275-46a9-978e-22d92841088d?P1=1792131308&P2=404&P3=2&P4=VRpkFS8IlXsCTuA9K0aGnB7X52nt8pxIEUkvIU5sGRj9p%2bcpgFBPpRVLpzB%2buXeacxGyXKVIc20xAdLN0MmeMA%3d%3d",
+      "sha256": "3b439386ceb3767f51bf946f9cbaae0d725a6d8ac85be8f92ac5d8186a0c83bf",
+      "fileName": "MicrosoftEdge_ARM64_157.0.4327.0.exe",
+      "key": "canary-arm64",
+      "channel": "Canary",
+      "arch": "arm64"
+    },
+    {
+      "key": "enterprise-arm64",
+      "channel": "企业版MSI",
+      "arch": "arm64",
+      "version": "155.0.4283.45",
+      "size": "208MB",
+      "downloadURL": "https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/7d824351-ba7e-4bb0-a09a-1628cb93bec4/MicrosoftEdgeEnterpriseARM64.msi",
+      "sha256": "a5c149884301e2a4e0e593237fd158fe01aff9cf37a4d45ff8edddadeb34e130",
+      "fileName": "MicrosoftEdgeEnterpriseARM64.msi"
+    },
+    {
+      "key": "enterprise-x86",
+      "channel": "企业版MSI",
+      "arch": "x86",
+      "version": "155.0.4283.45",
+      "size": "182MB",
+      "downloadURL": "https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/70c791aa-b40b-4780-b7a8-dba025c7dd39/MicrosoftEdgeEnterpriseX86.msi",
+      "sha256": "d88331976f750f174b6be0dd54988829fae5f3f610ea940a5f427cffff5962df",
+      "fileName": "MicrosoftEdgeEnterpriseX86.msi"
+    },
+    {
+      "key": "enterprise-x64",
+      "channel": "企业版MSI",
+      "arch": "x64",
+      "version": "155.0.4283.45",
+      "size": "205MB",
+      "downloadURL": "https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/2e772119-b856-4562-ad9a-8422e4224d42/MicrosoftEdgeEnterpriseX64.msi",
+      "sha256": "46db09d14b85a0df8bca87fbe9c3224ccf54f97d776bedc2eebf4b0c2ccbf5b4",
+      "fileName": "MicrosoftEdgeEnterpriseX64.msi"
+    },
+    {
+      "key": "win7-x64",
+      "channel": "Win7/2008R2",
+      "arch": "x64",
+      "version": "109.0.1518.140",
+      "size": "127MB",
+      "fileName": "MicrosoftEdge-109-x64（官方Update Catalog）",
+      "sha256": "",
+      "downloadURL": "https://www.catalog.update.microsoft.com/Search.aspx?q=edge-stable-109"
+    },
+    {
+      "key": "win7-x86",
+      "channel": "Win7/2008R2",
+      "arch": "x86",
+      "version": "109.0.1518.140",
+      "size": "127MB",
+      "fileName": "MicrosoftEdge-109-x86（官方Update Catalog）",
+      "sha256": "",
+      "downloadURL": "https://www.catalog.update.microsoft.com/Search.aspx?q=edge-stable-109"
+    }
+  ]
 };
+
+// 通道 → 样式 class
+function chClass(channel) {
+  var m = { '稳定版': 'ch-stable', 'Beta': 'ch-beta', 'Dev': 'ch-dev', 'Canary': 'ch-canary', 'Win7/2008R2': 'ch-win7', '企业版MSI': 'ch-enterprise' };
+  return m[channel] || 'ch-badge';
+}
+
+// 所有通道×架构的 CDP name（与后端 update_embedded.py 保持一致）
+var APPIDS = [
+  { key: 'stable-x64',   name: 'msedge-stable-win-x64',                   channel: '稳定版',   arch: 'x64'   },
+  { key: 'stable-x86',   name: 'msedge-stable-win-x86',                   channel: '稳定版',   arch: 'x86'   },
+  { key: 'stable-arm64', name: 'msedge-stable-win-arm64',                 channel: '稳定版',   arch: 'arm64' },
+  { key: 'beta-x64',     name: 'msedge-beta-win-x64',                     channel: 'Beta',     arch: 'x64'   },
+  { key: 'beta-x86',     name: 'msedge-beta-win-x86',                     channel: 'Beta',     arch: 'x86'   },
+  { key: 'beta-arm64',   name: 'msedge-beta-win-arm64',                   channel: 'Beta',     arch: 'arm64' },
+  { key: 'dev-x64',      name: 'msedge-dev-win-x64',                      channel: 'Dev',      arch: 'x64'   },
+  { key: 'dev-x86',      name: 'msedge-dev-win-x86',                      channel: 'Dev',      arch: 'x86'   },
+  { key: 'dev-arm64',    name: 'msedge-dev-win-arm64',                    channel: 'Dev',      arch: 'arm64' },
+  { key: 'canary-x64',   name: 'msedge-canary-win-x64',                   channel: 'Canary',   arch: 'x64'   },
+  { key: 'canary-x86',   name: 'msedge-canary-win-x86',                   channel: 'Canary',   arch: 'x86'   },
+  { key: 'canary-arm64', name: 'msedge-canary-win-arm64',                 channel: 'Canary',   arch: 'arm64' },
+  { key: 'win7-x64',     name: 'msedge-stable-win7-and-server2008r2-x64', channel: 'Win7/2008R2', arch: 'x64' },
+  { key: 'win7-x86',     name: 'msedge-stable-win7-and-server2008r2-x86', channel: 'Win7/2008R2', arch: 'x86' },
+  { key: 'enterprise-x64',  name: 'msedge-enterprise-stable-x64',         channel: '企业版MSI', arch: 'x64' },
+  { key: 'enterprise-x86',  name: 'msedge-enterprise-stable-x86',         channel: '企业版MSI', arch: 'x86' },
+  { key: 'enterprise-arm64',name: 'msedge-enterprise-stable-arm64',       channel: '企业版MSI', arch: 'arm64' }
+];
 
 function copyText(id, btn) {
   var el = document.getElementById(id);
-  var text = el.tagName === 'A' ? el.href : el.textContent;
-  if (!text || text === '-' || text === '加载中...') return;
+  if (!el || !el.dataset.sha) return;
+  var text = el.dataset.sha;
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(text).then(function() {
       if (btn) { btn.classList.add('copied'); setTimeout(function(){ btn.classList.remove('copied'); }, 1500); }
-      showToast('已复制到剪贴板');
+      showToast('SHA256 已复制');
     }).catch(function() { fallbackCopy(text, btn); });
   } else {
     fallbackCopy(text, btn);
@@ -283,7 +385,7 @@ function fallbackCopy(text, btn) {
   try { document.execCommand('copy'); } catch(e) {}
   document.body.removeChild(ta);
   if (btn) { btn.classList.add('copied'); setTimeout(function(){ btn.classList.remove('copied'); }, 1500); }
-  showToast('已复制到剪贴板');
+  showToast('SHA256 已复制');
 }
 
 function showToast(msg) {
@@ -293,59 +395,85 @@ function showToast(msg) {
   setTimeout(function() { t.classList.remove('show'); }, 2000);
 }
 
+// UTC-4 显示（固定偏移，对应美东夏令时）
+function fmtUTC4(isoStr) {
+  var t = new Date(isoStr);
+  if (isNaN(t.getTime())) return isoStr;
+  var s = new Date(t.getTime() - 4 * 3600 * 1000).toISOString().slice(0, 16).replace('T', ' ');
+  return s + ' (UTC-4)';
+}
+
 function renderData(data) {
-  var types = ['x64', 'arm64'];
-  for (var i = 0; i < types.length; i++) {
-    var type = types[i];
-    var card = data[type];
-    document.getElementById('meta-' + type).textContent = 'v' + card.version + ' / ' + card.size;
-    var linkEl = document.getElementById('link-' + type);
-    linkEl.href = card.downloadURL;
-    linkEl.textContent = card.downloadURL;
-    var dlEl = document.getElementById('dl-' + type);
-    dlEl.href = card.downloadURL;
-    document.getElementById('dl-size-' + type).textContent = '约 ' + card.size + ' · 完整离线包 · 官方直链';
-    document.getElementById('badge-' + type).textContent = '稳定版 ' + card.version;
+  var items = (data && data.items) || [];
+  var body = document.getElementById('verBody');
+  body.innerHTML = '';
+  items.forEach(function(item) {
+    var tr = document.createElement('tr');
+    var shaId = 'sha-' + item.key;
+    var shaVal = item.sha256 || '';
+    var shaCell;
+    if (shaVal) {
+      var shaShort = shaVal.slice(0, 16) + '…';
+      shaCell = '<span class="sha"><span class="hash" id="' + shaId + '" data-sha="' + shaVal + '" title="' + shaVal + '">' + shaShort + '</span>' +
+        '<button class="copy-btn" onclick="copyText(\'' + shaId + '\', this)">复制</button></span>';
+    } else {
+      shaCell = '<span class="sha" style="color:#555">-</span>';
+    }
+    tr.innerHTML =
+      '<td><span class="ch-badge ' + chClass(item.channel) + '">' + item.channel + '</span></td>' +
+      '<td class="arch">' + item.arch + '</td>' +
+      '<td class="ver">' + item.version + '</td>' +
+      '<td class="size">' + item.size + '</td>' +
+      '<td class="fname">' + item.fileName + '</td>' +
+      '<td>' + shaCell + '</td>' +
+      '<td><a class="dl-link" href="' + item.downloadURL + '" target="_blank" rel="noopener">下载 ↓</a></td>';
+    body.appendChild(tr);
+  });
+  if (data && data.checked_at) {
+    document.getElementById('versionInfo').textContent = '数据更新：' + fmtUTC4(data.checked_at) + ' · 共 ' + items.length + ' 个版本';
   }
-  document.getElementById('versionInfo').textContent = '最新稳定版：v' + data.x64.version + ' （数据更新 ' + data.checked_at + '）';
 }
 
 // 先用嵌入数据渲染
 renderData(EMBEDDED_DATA);
 
-// 尝试通过 CDP API 获取最新版（可能被 CORS 拦截，失败则用嵌入数据）
+// 尝试通过 CDP API 获取全部通道最新版（可能被 CORS 拦截，失败则用嵌入数据）
 function fetchLatest() {
-  var appids = { 'x64': 'msedge-stable-win-x64', 'arm64': 'msedge-stable-win-arm64' };
+  var pending = APPIDS.length;
   var results = {};
-  var pending = Object.keys(appids).length;
-  Object.keys(appids).forEach(function(type) {
-    var appid = appids[type];
-    fetch('https://msedge.api.cdp.microsoft.com/api/v2/contents/Browser/namespaces/Default/names/' + appid + '/versions/latest?action=select', {
+  APPIDS.forEach(function(t) {
+    fetch('https://msedge.api.cdp.microsoft.com/api/v2/contents/Browser/namespaces/Default/names/' + t.name + '/versions/latest?action=select', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'User-Agent': 'Microsoft Edge Update/1.3.183.29;winhttp' },
       body: JSON.stringify({ "targetingAttributes": { "IsInternalUser": true, "Updater": "MicrosoftEdgeUpdate", "UpdaterVersion": "1.3.183.29" } })
     }).then(function(r) { return r.json(); }).then(function(d) {
       var version = d && d.ContentId && d.ContentId.Version;
-      if (version) {
-        results[type] = version;
-        return fetch('https://msedge.api.cdp.microsoft.com/api/v1.1/internal/contents/Browser/namespaces/Default/names/' + appid + '/versions/' + version + '/files?action=GenerateDownloadInfo', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'User-Agent': 'Microsoft Edge Update/1.3.183.29;winhttp' },
-          body: ''
-        }).then(function(r) { return r.json(); }).then(function(files) {
-          files.sort(function(a, b) { return (b.SizeInBytes || 0) - (a.SizeInBytes || 0); });
-          if (files.length > 0) {
-            var url = files[0].Url.replace('http://msedge.b', 'https://msedge.sb');
-            var size = (files[0].SizeInBytes / 1048576).toFixed(0) + 'MB';
-            EMBEDDED_DATA[type] = { version: version, size: size, downloadURL: url };
-          }
-        });
-      }
+      if (!version) return;
+      return fetch('https://msedge.api.cdp.microsoft.com/api/v1.1/internal/contents/Browser/namespaces/Default/names/' + t.name + '/versions/' + version + '/files?action=GenerateDownloadInfo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'User-Agent': 'Microsoft Edge Update/1.3.183.29;winhttp' },
+        body: ''
+      }).then(function(r) { return r.json(); }).then(function(files) {
+        files.sort(function(a, b) { return (b.SizeInBytes || 0) - (a.SizeInBytes || 0); });
+        if (files.length > 0) {
+          var url = files[0].Url.replace('http://msedge.b', 'https://msedge.sb');
+          var size = (files[0].SizeInBytes / 1048576).toFixed(0) + 'MB';
+          var sha = (files[0].Sha256 || '').toLowerCase();
+          var chan = t.channel;
+          var fname = chan === '企业版MSI'
+            ? 'MicrosoftEdgeEnterprise' + t.arch.charAt(0).toUpperCase() + t.arch.slice(1) + '.msi'
+            : 'msedge_' + t.key.split('-')[0] + '_' + t.arch + '_' + version + '.exe';
+          results[t.key] = { key: t.key, channel: chan, arch: t.arch, version: version, size: size, downloadURL: url, sha256: sha, fileName: fname };
+        }
+      });
     }).catch(function() {}).finally(function() {
       pending--;
       if (pending === 0) {
-        EMBEDDED_DATA.checked_at = new Date().toISOString().slice(0, 16).replace('T', ' ');
-        renderData(EMBEDDED_DATA);
+        var items = APPIDS.map(function(t) { return results[t.key]; }).filter(Boolean);
+        if (items.length > 0) {
+          EMBEDDED_DATA = { checked_at: new Date().toISOString(), items: items };
+          renderData(EMBEDDED_DATA);
+        }
       }
     });
   });
