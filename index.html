@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Microsoft Edge 离线安装包下载</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Microsoft YaHei', sans-serif;
+    background: #10151f;
+    color: #e0e0e0;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  .container { max-width: 1000px; margin: 0 auto; }
+  h1 {
+    text-align: center;
+    font-size: 1.7em;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #4fc3f7, #00b4d8, #00e5a0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .subtitle {
+    text-align: center;
+    color: #888;
+    font-size: 0.85em;
+    margin-bottom: 8px;
+  }
+  .version-info {
+    text-align: center;
+    color: #4fc3f7;
+    font-size: 0.85em;
+    margin-bottom: 16px;
+    font-family: 'Consolas', 'Monaco', monospace;
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 700px) {
+    .cards { grid-template-columns: 1fr; }
+  }
+  .card {
+    background: #16213e;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #1e3a5f;
+    transition: border-color 0.3s;
+  }
+  .card:hover { border-color: #4fc3f7; }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 1.15em;
+    font-weight: 600;
+    color: #fff;
+  }
+  .badge {
+    font-size: 0.7em;
+    padding: 3px 8px;
+    border-radius: 10px;
+    background: #1e3a5f;
+    color: #4fc3f7;
+  }
+  .field { margin-bottom: 10px; }
+  .field-label {
+    font-size: 0.72em;
+    color: #888;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .field-value {
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.72em;
+    background: #0b1220;
+    padding: 6px 8px;
+    border-radius: 6px;
+    word-break: break-all;
+    color: #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .field-value a {
+    color: #4fc3f7;
+    text-decoration: none;
+    flex: 1;
+  }
+  .field-value a:hover { text-decoration: underline; }
+  .field-value span { flex: 1; }
+  .copy-btn {
+    background: none;
+    border: 1px solid #1e3a5f;
+    color: #888;
+    padding: 2px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85em;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .copy-btn:hover { border-color: #4fc3f7; color: #4fc3f7; }
+  .copy-btn.copied { border-color: #00e5a0; color: #00e5a0; }
+  .download-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: linear-gradient(135deg, #00a8e8, #00897b);
+    color: #fff;
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    font-weight: 600;
+    margin-top: 12px;
+    transition: opacity 0.2s;
+  }
+  .download-btn:hover { opacity: 0.9; }
+  .download-btn .sub {
+    display: block;
+    font-size: 0.75em;
+    font-weight: normal;
+    opacity: 0.85;
+    margin-top: 3px;
+  }
+  .note {
+    background: #1e3a5f;
+    border-left: 3px solid #4fc3f7;
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 20px;
+    font-size: 0.82em;
+    color: #aaa;
+    line-height: 1.6;
+  }
+  .note strong { color: #4fc3f7; }
+  .footer {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 0.75em;
+    color: #555;
+    line-height: 1.8;
+  }
+  .footer a { color: #4fc3f7; text-decoration: none; }
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1e3a5f;
+    color: #4fc3f7;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 0.9em;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Microsoft Edge 离线安装包</h1>
+  <p class="subtitle">官方 CDP API 直链 · 完整离线安装包 · 支持 IDM 下载</p>
+  <p class="version-info" id="versionInfo">正在获取最新版本...</p>
+
+  <div class="note">
+    <strong>说明：</strong>数据来自微软官方 CDP API（msedge.api.cdp.microsoft.com），版本号自动更新。
+    下载链接为微软官方 CDN 直链，可直接用浏览器或 IDM 下载完整离线安装包，无需登录。
+  </div>
+
+  <div class="cards">
+    <!-- Windows x64 -->
+    <div class="card" id="card-x64">
+      <div class="card-header">
+        <span class="card-title">Windows x64</span>
+        <span class="badge" id="badge-x64">稳定版</span>
+      </div>
+      <div class="field">
+        <div class="field-label">适用系统</div>
+        <div class="field-value"><span>Win10 / Win11 64位</span></div>
+      </div>
+      <div class="field">
+        <div class="field-label">版本 / 大小</div>
+        <div class="field-value"><span id="meta-x64">-</span></div>
+      </div>
+      <div class="field">
+        <div class="field-label">官方直链（支持IDM）</div>
+        <div class="field-value">
+          <a href="#" target="_blank" id="link-x64">-</a>
+          <button class="copy-btn" onclick="copyText('link-x64', this)">复制</button>
+        </div>
+      </div>
+      <a href="#" target="_blank" class="download-btn" id="dl-x64">
+        立即下载（离线包）
+        <span class="sub" id="dl-size-x64"></span>
+      </a>
+    </div>
+
+    <!-- Windows ARM64 -->
+    <div class="card" id="card-arm64">
+      <div class="card-header">
+        <span class="card-title">Windows ARM64</span>
+        <span class="badge" id="badge-arm64">稳定版</span>
+      </div>
+      <div class="field">
+        <div class="field-label">适用系统</div>
+        <div class="field-value"><span>Win11 ARM 设备（骁龙/Surface）</span></div>
+      </div>
+      <div class="field">
+        <div class="field-label">版本 / 大小</div>
+        <div class="field-value"><span id="meta-arm64">-</span></div>
+      </div>
+      <div class="field">
+        <div class="field-label">官方直链（支持IDM）</div>
+        <div class="field-value">
+          <a href="#" target="_blank" id="link-arm64">-</a>
+          <button class="copy-btn" onclick="copyText('link-arm64', this)">复制</button>
+        </div>
+      </div>
+      <a href="#" target="_blank" class="download-btn" id="dl-arm64">
+        立即下载（离线包）
+        <span class="sub" id="dl-size-arm64"></span>
+      </a>
+    </div>
+  </div>
+
+  <p class="footer" id="footer">
+    数据来源：<a href="https://msedge.api.cdp.microsoft.com" target="_blank">Microsoft Edge CDP API</a> |
+    版本自动更新 · 由 AI 云自动化维护<br>
+    <a href="https://www.423down.com" target="_blank">423down.com</a>
+  </p>
+</div>
+
+<div class="toast" id="toast">已复制到剪贴板</div>
+
+<script>
+// 嵌入兜底数据（由 GitHub Actions 定期更新，页面加载失败时使用）
+var EMBEDDED_DATA = {
+  "checked_at": "2026-10-09 12:00",
+  "x64": {
+    "version": "155.0.4283.45",
+    "size": "198MB",
+    "downloadURL": "https://msedge.sb.tlu.dl.delivery.mp.microsoft.com/filestreamingservice/files/db6b5616-d868-437c-8ebe-096082316a2f?P1=1792122338&P2=404&P3=2&P4=VQj32%2f59OAhmTYSlE2ebSmPre%2ba8%2fInf63S%2bgqtxgm3TD4drNlCgSE6R2AuyuNiWIzgaf1ygYlD%2f3Ewqj1np1Q%3d%3d"
+  },
+  "arm64": {
+    "version": "155.0.4283.45",
+    "size": "201MB",
+    "downloadURL": "https://msedge.sb.tlu.dl.delivery.mp.microsoft.com/filestreamingservice/files/c641b5c2-5c59-4078-aed1-3e4d1879597a?P1=1792122340&P2=404&P3=2&P4=VVOcmiCuAPV4y4JSNfm1WUOlrtmLBDoVWCDU52vfvRQXpqGOAeej2rylt2fMLoCJEBaDDnLF3c53R8hefzT9rw%3d%3d"
+  }
+};
+
+function copyText(id, btn) {
+  var el = document.getElementById(id);
+  var text = el.tagName === 'A' ? el.href : el.textContent;
+  if (!text || text === '-' || text === '加载中...') return;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function() {
+      if (btn) { btn.classList.add('copied'); setTimeout(function(){ btn.classList.remove('copied'); }, 1500); }
+      showToast('已复制到剪贴板');
+    }).catch(function() { fallbackCopy(text, btn); });
+  } else {
+    fallbackCopy(text, btn);
+  }
+}
+
+function fallbackCopy(text, btn) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); } catch(e) {}
+  document.body.removeChild(ta);
+  if (btn) { btn.classList.add('copied'); setTimeout(function(){ btn.classList.remove('copied'); }, 1500); }
+  showToast('已复制到剪贴板');
+}
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 2000);
+}
+
+function renderData(data) {
+  var types = ['x64', 'arm64'];
+  for (var i = 0; i < types.length; i++) {
+    var type = types[i];
+    var card = data[type];
+    document.getElementById('meta-' + type).textContent = 'v' + card.version + ' / ' + card.size;
+    var linkEl = document.getElementById('link-' + type);
+    linkEl.href = card.downloadURL;
+    linkEl.textContent = card.downloadURL;
+    var dlEl = document.getElementById('dl-' + type);
+    dlEl.href = card.downloadURL;
+    document.getElementById('dl-size-' + type).textContent = '约 ' + card.size + ' · 完整离线包 · 官方直链';
+    document.getElementById('badge-' + type).textContent = '稳定版 ' + card.version;
+  }
+  document.getElementById('versionInfo').textContent = '最新稳定版：v' + data.x64.version + ' （数据更新 ' + data.checked_at + '）';
+}
+
+// 先用嵌入数据渲染
+renderData(EMBEDDED_DATA);
+
+// 尝试通过 CDP API 获取最新版（可能被 CORS 拦截，失败则用嵌入数据）
+function fetchLatest() {
+  var appids = { 'x64': 'msedge-stable-win-x64', 'arm64': 'msedge-stable-win-arm64' };
+  var results = {};
+  var pending = Object.keys(appids).length;
+  Object.keys(appids).forEach(function(type) {
+    var appid = appids[type];
+    fetch('https://msedge.api.cdp.microsoft.com/api/v2/contents/Browser/namespaces/Default/names/' + appid + '/versions/latest?action=select', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'User-Agent': 'Microsoft Edge Update/1.3.183.29;winhttp' },
+      body: JSON.stringify({ "targetingAttributes": { "IsInternalUser": true, "Updater": "MicrosoftEdgeUpdate", "UpdaterVersion": "1.3.183.29" } })
+    }).then(function(r) { return r.json(); }).then(function(d) {
+      var version = d && d.ContentId && d.ContentId.Version;
+      if (version) {
+        results[type] = version;
+        return fetch('https://msedge.api.cdp.microsoft.com/api/v1.1/internal/contents/Browser/namespaces/Default/names/' + appid + '/versions/' + version + '/files?action=GenerateDownloadInfo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'User-Agent': 'Microsoft Edge Update/1.3.183.29;winhttp' },
+          body: ''
+        }).then(function(r) { return r.json(); }).then(function(files) {
+          files.sort(function(a, b) { return (b.SizeInBytes || 0) - (a.SizeInBytes || 0); });
+          if (files.length > 0) {
+            var url = files[0].Url.replace('http://msedge.b', 'https://msedge.sb');
+            var size = (files[0].SizeInBytes / 1048576).toFixed(0) + 'MB';
+            EMBEDDED_DATA[type] = { version: version, size: size, downloadURL: url };
+          }
+        });
+      }
+    }).catch(function() {}).finally(function() {
+      pending--;
+      if (pending === 0) {
+        EMBEDDED_DATA.checked_at = new Date().toISOString().slice(0, 16).replace('T', ' ');
+        renderData(EMBEDDED_DATA);
+      }
+    });
+  });
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', fetchLatest);
+} else {
+  fetchLatest();
+}
+</script>
+</body>
+</html>
