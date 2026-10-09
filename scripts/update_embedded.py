@@ -6,8 +6,12 @@
 - Win7/Win8 最终版（109.0.1518.140，含 x64/x86/arm64）：微软 CDP API，
   product name 为 msedge-stable-win7and8-{x64|x86|arm64}
 - 企业版 MSI：微软官方 edgeupdates API（edgeupdates.microsoft.com/api/products?view=enterprise）
+- 官方发布时间（published）：优先取 edgeupdates 的 PublishedTime（Stable/Beta/Dev/企业版，
+  权威发布时间）；Canary 与 Win7 不在 edgeupdates，取安装包文件的 Last-Modified（官方文件时间）。
+  所有时间统一为带 Z 的 UTC ISO，前端固定换算 UTC-4。
 """
 import base64
+import email.utils as eut
 import json
 import re
 import ssl
@@ -44,6 +48,13 @@ def _ctx():
     ctx.check_hostname = False
     ctx.verify_mode = ssl.CERT_NONE
     return ctx
+
+
+def _ensure_z(iso: str) -> str:
+    """edgeupdates 的 PublishedTime 无后缀但为 UTC，补 Z 让前端按 UTC 解析"""
+    if iso and not iso.endswith("Z"):
+        return iso + "Z"
+    return iso
 
 
 def _norm_url(raw: str) -> str:
@@ -88,19 +99,58 @@ def probe_cdp(name: str, files_path: str = "v1.1/internal"):
     return out
 
 
-def probe_enterprise():
-    """企业版 MSI：edgeupdates API 取各架构最新 Stable 的 msi artifact"""
+def head_last_modified(url: str) -> str:
+    """HEAD 安装包取 Last-Modified（官方文件时间），返回带 Z 的 UTC ISO"""
     ctx = _ctx()
-    req = urllib.request.Request(
-        "https://edgeupdates.microsoft.com/api/products?view=enterprise",
-        headers={"User-Agent": "Mozilla/5.0"},
-    )
-    with urllib.request.urlopen(req, timeout=20, context=ctx) as resp:
-        data = json.loads(resp.read().decode())
+    for _ in range(3):
+        try:
+            req = urllib.request.Request(url, method="HEAD", headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(req, timeout=25, context=ctx) as r:
+                lm = r.headers.get("Last-Modified")
+                if lm:
+                    dt = eut.parsedate_to_datetime(lm)
+                    return dt.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        except Exception:
+            continue
+    return ""
+
+
+_EDGE_RAW = None
+
+
+def edgeupdates_raw():
+    global _EDGE_RAW
+    if _EDGE_RAW is None:
+        ctx = _ctx()
+        req = urllib.request.Request(
+            "https://edgeupdates.microsoft.com/api/products?view=enterprise",
+            headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=25, context=ctx) as r:
+            _EDGE_RAW = json.loads(r.read().decode())
+    return _EDGE_RAW
+
+
+def edge_published(product: str, arch: str, version: str) -> str:
+    """edgeupdates 官方发布时间：Product=Stable/Beta/Dev，匹配 Windows/架构/版本"""
+    for p in edgeupdates_raw():
+        if p.get("Product") != product:
+            continue
+        for rel in p.get("Releases", []):
+            if (rel.get("Platform") == "Windows" and rel.get("Architecture") == arch
+                    and rel.get("ProductVersion") == version):
+                return _ensure_z(rel.get("PublishedTime"))
+    return ""
+
+
+PRODUCT_BY_CHANNEL = {"稳定版": "Stable", "Beta": "Beta", "Dev": "Dev"}
+
+
+def probe_enterprise():
+    """企业版 MSI：edgeupdates 取各架构最新 Stable 的 msi artifact（带官方发布时间）"""
     items = []
     arch_map = {"x64": "x64", "x86": "x86", "arm64": "arm64"}
     seen = set()
-    for prod in data:
+    for prod in edgeupdates_raw():
         if prod.get("Product") != "Stable":
             continue
         for rel in prod.get("Releases", []):
@@ -120,6 +170,7 @@ def probe_enterprise():
                         "downloadURL": loc,
                         "sha256": (a.get("Hash") or "").lower(),
                         "fileName": fname,
+                        "published": _ensure_z(rel.get("PublishedTime")),
                     })
                     seen.add(arch)
                     break
@@ -134,20 +185,27 @@ def main():
             info["key"] = key
             info["channel"] = label
             info["arch"] = arch
+            # 官方发布时间：Canary 不在 edgeupdates → Last-Modified；其余优先 edgeupdates，失败兜底 Last-Modified
+            if label == "Canary":
+                info["published"] = head_last_modified(info["downloadURL"])
+            else:
+                info["published"] = edge_published(PRODUCT_BY_CHANNEL.get(label), arch, info["version"]) \
+                    or head_last_modified(info["downloadURL"])
             items.append(info)
-            print(f"{key}: v{info['version']} {info['size']}")
+            print(f"{key}: v{info['version']} {info['size']} pub={info['published']}")
         except Exception as e:
             print(f"{key} 探测失败: {e}")
 
-    # Win7/Win8 最终版（CDP API，v2 路径已验证）
+    # Win7/Win8 最终版（CDP v2 路径已验证；发布时间取文件 Last-Modified）
     for key, name, arch in WIN7_TARGETS:
         try:
             info = probe_cdp(name, files_path="v2")
             info["key"] = key
             info["channel"] = "Win7/2008R2"
             info["arch"] = arch
+            info["published"] = head_last_modified(info["downloadURL"])
             items.append(info)
-            print(f"{key}: v{info['version']} {info['size']} sha={info['sha256'][:12]}")
+            print(f"{key}: v{info['version']} {info['size']} pub={info['published']}")
         except Exception as e:
             print(f"{key} 探测失败: {e}")
 
@@ -155,7 +213,7 @@ def main():
         ent = probe_enterprise()
         items.extend(ent)
         for e in ent:
-            print(f"enterprise-{e['arch']}: v{e['version']} {e['size']} {e['fileName']}")
+            print(f"enterprise-{e['arch']}: v{e['version']} {e['size']} pub={e['published']}")
     except Exception as e:
         print(f"企业版探测失败: {e}")
 
