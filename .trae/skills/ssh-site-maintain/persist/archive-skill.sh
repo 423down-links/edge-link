@@ -8,7 +8,7 @@
 set -e
 SKILL_NAME="ssh-site-maintain"
 TOKENS_ENV="/data/user/skills/gh-cf-tokens/tokens.env"
-GH_REPO="423down-links/skills"
+GH_REPO="423down-links/skillpack"
 GH_PATH="ssh-site-maintain-latest.tar.gz"
 API="https://api.github.com/repos/$GH_REPO/contents/$GH_PATH"
 STAGE="$(mktemp -d)"

@@ -8,7 +8,7 @@ set -uo pipefail
 
 SKILL_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 TOKENS_ENV="/data/user/skills/gh-cf-tokens/tokens.env"
-GH_URL="https://api.github.com/repos/423down-links/skills/contents/ssh-site-maintain-latest.tar.gz"
+GH_URL="https://api.github.com/repos/423down-links/skillpack/contents/ssh-site-maintain-latest.tar.gz"
 CANON="/www/backup/skill-packages/ssh-site-maintain-latest.tar.gz"
 RECOV="/www/skill-recovery/skillpack.tar.gz"
 

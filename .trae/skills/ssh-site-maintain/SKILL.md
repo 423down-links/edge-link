@@ -72,7 +72,7 @@ bash /workspace/.trae/skills/ssh-site-maintain/persist/ensure-ssh-key.sh   # 默
 | 层 | 触发条件 | 动作 |
 |---|---|---|
 | ① 现成 `~/.ssh` | 免密已通 | 直接返回，零动作 |
-| ② GitHub 恢复点 | ① 不通且有 `GH_TOKEN` | 拉 `423down-links/skills/ssh-site-maintain-latest.tar.gz`（含私钥）解包还原 `~/.ssh`（技能包缺失时一并还原） |
+| ② GitHub 恢复点 | ① 不通且有 `GH_TOKEN` | 拉 `423down-links/skillpack/ssh-site-maintain-latest.tar.gz`（含私钥）解包还原 `~/.ssh`（技能包缺失时一并还原） |
 | ③ 423down HTTPS 恢复点 | ② 不通 | 带 `X-Recover-Token` 头拉 `/www/skill-recovery/skillpack.tar.gz` 解包还原 |
 | ④ 密码引导 | ②③ 还原客户端密钥后仍连不上 | = 服务器 `authorized_keys` 被清空 → 先等服务器端 `agent-key-guard` 自动补回，再不行才 §1.1 密码引导 |
 
@@ -337,13 +337,13 @@ comm -13 old-all new-all > new-only     # 新有旧无：新增捕获，逐条�
 > bash /workspace/.trae/skills/ssh-site-maintain/persist/maintain-close.sh
 > ```
 > `maintain-close.sh` = 调 `archive-skill.sh`（推 GitHub → 回拉 → 落服务器双镜像）**并**做三处 `sha256` 一致性校验，输出 `PASS/FAIL`。只要归档本身，可单独跑 `archive-skill.sh`。
-> 归档 = 打包技能包本体 + `/workspace/.trae/mcp.json` + `~/.ssh/{id_ed25519,config,hosts.json(如有)}`，**双通道**同步到 `423down:/www/backup/skill-packages/` 与 GitHub 私有仓 `423down-links/skills`。
+> 归档 = 打包技能包本体 + `/workspace/.trae/mcp.json` + `~/.ssh/{id_ed25519,config,hosts.json(如有)}`，**双通道**同步到 `423down:/www/backup/skill-packages/` 与 GitHub 私有仓 `423down-links/skillpack`。
 
 **归档（每次改技能包后执行）：**
 ```bash
 bash /workspace/.trae/skills/ssh-site-maintain/persist/archive-skill.sh
 ```
-归档 = 打包技能包本体 + `/workspace/.trae/mcp.json` + `~/.ssh/{id_ed25519,config,hosts.json(如有)}`（**含私钥**，冷启动免密码）。**GitHub 私有仓 `423down-links/skills` 为唯一权威源**；服务器**不留时间戳历史档**，只镜像两处、内容与 GitHub 最新版**逐字节一致**：
+归档 = 打包技能包本体 + `/workspace/.trae/mcp.json` + `~/.ssh/{id_ed25519,config,hosts.json(如有)}`（**含私钥**，冷启动免密码）。**GitHub 私有仓 `423down-links/skillpack` 为唯一权威源**；服务器**不留时间戳历史档**，只镜像两处、内容与 GitHub 最新版**逐字节一致**：
 ① `/www/backup/skill-packages/ssh-site-maintain-latest.tar.gz`（服务器唯一 canonical；root 600）；
 ② `/www/skill-recovery/skillpack.tar.gz`（HTTPS 恢复点；root:www 640，nginx token 门禁）。
 脚本流程：本地构建 → 推 GitHub → **从 GitHub 回拉**再落服务器两处（GitHub 推失败则退用本地构建并告警）。清理与镜像均由 `archive-skill.sh` 一并完成，无需手工。
@@ -354,7 +354,7 @@ bash /workspace/.trae/skills/ssh-site-maintain/persist/archive-skill.sh
 ```bash
 mkdir -p ~/.ssh /workspace && chmod 700 ~/.ssh && \
 curl -fsSL -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github.raw" \
-  "https://api.github.com/repos/423down-links/skills/contents/ssh-site-maintain-latest.tar.gz" -o /tmp/sp.tgz && \
+  "https://api.github.com/repos/423down-links/skillpack/contents/ssh-site-maintain-latest.tar.gz" -o /tmp/sp.tgz && \
 tar -xzf /tmp/sp.tgz -C /workspace .trae && \
 tar -xzf /tmp/sp.tgz -C ~/.ssh --strip-components=1 .ssh && \
 chmod 600 ~/.ssh/id_ed25519 ~/.ssh/config
@@ -441,7 +441,7 @@ bash /workspace/.trae/skills/ssh-site-maintain/mcp/bin/e2e-verify-all.sh
 
 ### 2026-10-10（服务器存档治理：GitHub 为准 + 清理旧档 + 恢复点加固）
 
-- 口径：**GitHub 私有仓 `423down-links/skills` 为唯一权威源**；服务器不再保留时间戳历史档。
+- 口径：**GitHub 私有仓 `423down-links/skillpack` 为唯一权威源**；服务器不再保留时间戳历史档。
 - 清理：删 `/www/backup/skill-packages/` 下 3 个旧档（`ssh-site-maintain-20261009-165222`、`-20261010-031156`、`站点管理-20261010-030126`）及 2 个 `latest` 软链；余下唯一 canonical 更名为 `ssh-site-maintain-latest.tar.gz`（= GitHub 最新，sha256 `d0cf00…e3c9`，root 600）；保留 `restore-skill.sh`。
 - 恢复点：`/www/skill-recovery/skillpack.tar.gz` 由旧扁平包（sha `28e3f1…`）刷新为 GitHub 最新（`.trae` 布局）。
 - 加固：恢复点 location 加 `access_log off`（此前路径 token 明文进 `access.log` 及 `-20261008` 轮转档）+ 专属限流 `recover_rl 3r/m`（zone 定义在 `nginx.conf` http 块，紧跟 `tool_ua`）。`nginx -t` 通过、已 reload。
