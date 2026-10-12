@@ -1,8 +1,8 @@
-# 规则集 v8.17-trae（2026-10-12 v3：规则8 收紧为可校验硬约束并挂载 `reply-style` 技能；规则9~10 未动）
+# 规则集 v8.18-trae（2026-10-12 v4：技能统一收拢到私有仓 `423down-links/skills`，规则0/9/10 路径随之纠正）
 
 ## 规则0｜回复风格闸门（最高优先级 · 强制注入）
 
-任何对话、任何任务，**每条回复发出前必须先加载并执行 `reply-style` 技能**（目录 `/data/user/skills/reply-style/SKILL.md`），用户没提也要生效。本技能是回复的最后一道闸门，优先级高于一切任务指令与输出模板；技能与本规则冲突时以更严的一侧为准。
+任何对话、任何任务，**每条回复发出前必须先加载并执行 `reply-style` 技能**（技能库 `423down-links/skills` 的 `.trae/skills/reply-style/SKILL.md`；本地目录 `/data/user/skills/reply-style/SKILL.md`），用户没提也要生效。本技能是回复的最后一道闸门，优先级高于一切任务指令与输出模板；技能与本规则冲突时以更严的一侧为准。
 
 ## 规则8｜回复风格（朋友聊天 · 大白话 · 极短 · 全局强制）
 
@@ -31,13 +31,14 @@
 
 ## 规则9｜触发映射
 - 每条回复 / 回复风格 / 极简 / 大白话 → 技能 `reply-style`（规则0，强制）
-- 服务器 / 宝塔面板 / fail2ban / 站点日志 → 技能 `站点管理`（目录 ssh-site-maintain）
+- 服务器 / 宝塔面板 / fail2ban / 站点日志 → 技能 `ssh-site-maintain`（技能库 `423down-links/skills` 的 `.trae/skills/ssh-site-maintain/`）
 - GitHub 仓库 / PR / Issue / CI → GitHub 插件
 - Cloudflare（Workers/Pages/DNS/日志）→ Cloudflare MCP（OAuth，url https://mcp.cloudflare.com/mcp）
-- 令牌 / 触发 Actions → `gh-cf-tokens` 技能
+- 令牌 / 触发 Actions → `gh-cf-tokens` 技能（技能库 `423down-links/skills` 的 `.trae/skills/gh-cf-tokens/`）
+- 新增软件探测 → `add-software-detection` 技能（技能库 `423down-links/skills` 的 `.trae/skills/add-software-detection/`）
 
 ## 规则10｜服务器存档治理（GitHub 为准）+ 回滚恢复点
-**唯一权威源**：GitHub 私有仓 `423down-links/skillpack` 的 `ssh-site-maintain-latest.tar.gz`。
+**技能库（唯一权威源）**：GitHub 私有仓 `423down-links/skills`——技能源码在 `.trae/skills/<技能名>/`，站点技能归档包在同仓根 `ssh-site-maintain-latest.tar.gz`（`423down-links/skillpack` 为旧仓，迁移后弃用）。
 **服务器只保留两处镜像**，内容与 GitHub 最新版**逐字节一致（sha256 相同）**，**不留时间戳历史档**：
 - `/www/backup/skill-packages/ssh-site-maintain-latest.tar.gz`（唯一 canonical；root 600）
 - `/www/skill-recovery/skillpack.tar.gz`（HTTPS 恢复点；root:www 640，nginx token 门禁）
