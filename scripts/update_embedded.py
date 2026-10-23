@@ -8,7 +8,7 @@
 - 企业版 MSI：微软官方 edgeupdates API（edgeupdates.microsoft.com/api/products?view=enterprise）
 - 官方发布时间（published）：优先取 edgeupdates 的 PublishedTime（Stable/Beta/Dev/企业版，
   权威发布时间）；Canary 与 Win7 不在 edgeupdates，取安装包文件的 Last-Modified（官方文件时间）。
-  所有时间统一为带 Z 的 UTC ISO，前端固定换算 UTC-4。
+  所有时间统一为带 Z 的 UTC ISO，前端固定换算北京时间（UTC+8）。
 """
 import base64
 import email.utils as eut
