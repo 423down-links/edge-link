@@ -2,8 +2,8 @@ name: Update Edge Version
 
 on:
   schedule:
-    # 每小时检测官方 API；检测到更新自动 push + 部署，不再固定每天一次
-    - cron: '0 * * * *'
+    # 每天北京时间 05:00（UTC 21:00）检测官方 API；检测到更新自动 push + 部署
+    - cron: '0 21 * * *'
   push:
     branches: [main]
   workflow_dispatch:
@@ -43,8 +43,8 @@ jobs:
           fi
 
       - name: Deploy to Cloudflare Pages
-        # 检测到更新（schedule/dispatch）或代码/数据变更（push）时都立即部署；直用 wrangler 避开组织对第三方 action 的限制
-        if: github.event_name == 'push' || steps.commit.outputs.changed == 'true'
+        # 手动触发/push 一律部署；定时任务仅在检测到变化时部署
+        if: github.event_name != 'schedule' || steps.commit.outputs.changed == 'true'
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: 1f5e2d11ee6dfb31343229a8e5c819b3
