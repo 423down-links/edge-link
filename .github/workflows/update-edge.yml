@@ -2,8 +2,9 @@ name: Update Edge Version
 
 on:
   schedule:
-    # 每天北京时间 05:00（UTC 21:00）检测官方 API；检测到更新自动 push + 部署
-    - cron: '0 21 * * *'
+    # 每天北京时间 05:30、18:30（UTC 21:30、10:30）检测官方 API；检测到更新自动 push + 部署
+    - cron: '30 21 * * *'
+    - cron: '30 10 * * *'
   push:
     branches: [main]
   workflow_dispatch:
